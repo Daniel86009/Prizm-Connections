@@ -1,21 +1,10 @@
-# Casio fx-CG project template
+# Prizm Connections
+This is a port of [New York Times connections](https://www.nytimes.com/games/connections) for the Casio Prizm fx-cg50. It might work on other Prizm calculators but I haven't tested them. Some parts of the code were taken from [PrizmWordle](https://www.cemetech.net/downloads/files/2233/x2570) by rickymat8.
 
-This is a starter template for C/C++ projects targeting the Casio fx-CG series graphing calculators, using the [Prizm SDK](https://github.com/Jonimoose/libfxcg).
-
-## Using this template
-
-Source code is placed in `/src`. Resources used to build the `g3a` add-in package are placed in `resource`, at the moment this is only the home screen icons in unselected and selected versions.
-
-### Prerequisites
-
-You'll need to [build and install the Prizm SDK](https://prizm.cemetech.net/Tutorials/PrizmSDK_Setup_Guide/) for your system, as well as appropriate versions of the GCC toolchain targeting the SH4 CPU. Set the shell environment variable `FXCGSDK` to the directory where the SDK is installed (parent of the `lib`, `include` and `toolchain` directories).
-
-### Building
-
-To build your project, simply run `make` in the project root directory. Object files (`.o`) are placed in `/build`, and final artifacts are placed in the root directory.
-
-The build produces an executable file (`.bin`) and a Casio add-in package (`.g3a`). Connect your calculator via USB and copy the `g3a` file to the root directory.
-
-## Additional files
-
-`compile_flags.txt` lets clangd know where to find the `libfxcg` headers for neovim users. Replace the path with your SDK install path.
+## Controls
+- To move the cursor use the arrows
+- EXE to select/deselect
+- F2 to deselect all
+- F5 to submit answer
+- AC to reset
+- 0 to reveal an answer

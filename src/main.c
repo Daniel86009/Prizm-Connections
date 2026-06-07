@@ -10,16 +10,12 @@
 #include "rand.h"
 #include "games.h"
 
-//216x384
-
 int selection = 0;
 int selected[4] = {};
 int selectionCount = 0;
 
 int guesses[4][4] = {};
 int guessCount = 0;
-
-char answers[4][64] = {};
 
 const char *categoryNames[4] = {};
 const char *board[16] = {};
@@ -31,6 +27,7 @@ bool lastIsOneAway = false;
 
 bool revealAnswer = false;
 bool canReset = false;
+int gameState = 0; //0 = Playing, 1 = Won, 2 = Lost
 
 void sort(int *arr, int n) {
   int temp;
@@ -275,33 +272,8 @@ void drawUI() {
   if (lastIsOneAway == true) drawString(379 - 8*9, 150, "One Away!", (color_t)0x0000);
 }
 
-void drawDebug() {
-  drawString(5, 150, "Selected IDs: ", (color_t)0x0000);
-  
-  int printX = 110;
-  for (int i = 0; i < selectionCount; i++) {
-    char numStr[4];
-    
-    // Convert array integer to a string format safely
-    // e.g. index 5 becomes "5 "
-    numStr[0] = (selected[i] / 10) + '0';
-    numStr[1] = (selected[i] % 10) + '0';
-    numStr[2] = ' '; // spacer
-    numStr[3] = '\0';
-    
-    // Skip leading zero for cleaner printing if index < 10
-    if (numStr[0] == '0') {
-      drawString(printX, 150, &numStr[1], (color_t)0x0000);
-      printX += 16;
-    } else {
-      drawString(printX, 150, numStr, (color_t)0x0000);
-
-      printX += 24;
-    }
-  }
-}
-
 void drawResetScreen() {
+  //From PrizmWordle
   color_t* VRAM = (color_t*)GetVRAMAddress();  
   for(int j=0; j<LCD_HEIGHT_PX; j++) { 
     for(int i=0; i<LCD_WIDTH_PX;  i++) { 
@@ -346,7 +318,6 @@ void guess() {
 
     if (matchingArr(arr1, 4, arr2, 4) == true) {
       return;
-      break;
     }
   }
 
@@ -368,7 +339,14 @@ void guess() {
     else lastIsOneAway = false;
     for (int i = 0; i < 4; i++) guesses[guessCount][i] = selected[i];
     guessCount++;
+    if (guessCount == 4) gameState = 2;
   }
+
+  bool allCtgCorrect = true;
+  for (int i = 0; i < 4; i++) {
+    if (solvedCategories[i] == false) allCtgCorrect = false;
+  }
+  if (allCtgCorrect == true) gameState = 1;
 
   memset(selected, -1, sizeof(selected));
   selectionCount = 0;
@@ -403,6 +381,7 @@ void newBoard() {
 }
 
 void reset() {
+  gameState = 0;
   canReset = false;
 
   memset(selected, -1, sizeof(selected));
@@ -425,7 +404,7 @@ void reset() {
 int main() {
   int key;
 
-  // Clear VRAM
+  //Clear VRAM
   Bdisp_AllClr_VRAM();
   //Enable colours
   Bdisp_EnableColor(1);
@@ -434,19 +413,15 @@ int main() {
 
   //Set random seed
   srand(RTC_GetTicks());
+  //Get a new random board
   newBoard();
  
   drawGrid();
+  //Draw the controls
+  //Will disapear after the user presses a key
   drawControls();
-  //drawUI();
-  //drawDebug();
   
-
-  // Add-ins should NOT exit by returning from main, but call GetKey in a loop
-  // instead. This mirrors the behavior of included apps as you can exit with
-  // the MENU key or power off
   while (1) {
-    // GetKey also presents the contents of VRAM to the screen
     GetKey(&key);
     Bdisp_AllClr_VRAM();
 
@@ -466,6 +441,11 @@ int main() {
       
       case KEY_CTRL_EXE: {
         int index = -1;
+
+        int currentTileCategory = boardWordCtg[selection];
+        if (solvedCategories[currentTileCategory] == true) {
+          break;
+        }
 
         for (int i = 0; i < selectionCount; i++) {
           if (selection == selected[i]) {
@@ -504,28 +484,24 @@ int main() {
       case KEY_CHAR_1:
         if (revealAnswer == true) {
           solvedCategories[0] = true;
-          //solvedCategories[0] = solvedCategories[0] == true ? false : true;
           mostRecentSolved = 0;
         }
         break;
       case KEY_CHAR_2:
         if (revealAnswer == true) {
           solvedCategories[1] = true;
-          //solvedCategories[1] = solvedCategories[1] == true ? false : true;
           mostRecentSolved = 1;
         }
         break;
       case KEY_CHAR_3:
         if (revealAnswer == true) {
           solvedCategories[2] = true;
-          //solvedCategories[2] = solvedCategories[2] == true ? false : true;
           mostRecentSolved = 2;
         }
         break;
       case KEY_CHAR_4:
         if (revealAnswer == true) {
           solvedCategories[3] = true;
-          //solvedCategories[3] = solvedCategories[3] == true ? false : true;
           mostRecentSolved = 3;
         }
         break;
@@ -538,10 +514,16 @@ int main() {
     else selection = selection % 16;
 
     drawGrid();
-    drawUI();
+    drawUI(); 
+    if (gameState == 1) { //Draw win screen
+      fillArea(0, 160, LCD_WIDTH_PX, LCD_HEIGHT_PX, (color_t)0xffff);
+      drawString(LCD_WIDTH_PX / 2 - 10*4, 180, "You Won!!!", (color_t)0x0000);
+    } else if (gameState == 2) { //Draw loss screen
+      fillArea(0, 160, LCD_WIDTH_PX, LCD_HEIGHT_PX, (color_t)0xffff);
+      drawString(LCD_WIDTH_PX / 2 - 27*4, 180, "Out of guesses. Game Over!!", (color_t)0x0000);
+    }
     if (canReset == true || revealAnswer == true) drawResetScreen();
     else DrawFrame((color_t)0xffff);
-    //drawDebug();
   }
 
   return 0;

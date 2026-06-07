@@ -16,7 +16,7 @@ async function convert() {
         let out = 'ConnectionGame allGames[] = {</br>';
         let gameOuts = [];
 
-        for (let i = 0; i < data.length; i++) {
+        for (let i = 0; i < 831; i++) {
             let game = data[i];
 
             gameOuts.push('{</br>{</br>');

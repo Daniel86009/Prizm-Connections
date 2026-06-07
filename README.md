@@ -3,6 +3,11 @@ This is a port of [New York Times connections](https://www.nytimes.com/games/con
 
 All the games were gotten from [NYT-Connections-Answers](https://github.com/Eyefyre/NYT-Connections-Answers/tree/main) by Eyefyre.
 
+## Screenshots
+![Menu Icon](/Screenshots/Icon.jpg)
+![Controls in game](/Screenshots/Controls.jpg)
+![Half Completed game](/Screenshots/Half%20Completed.jpg)
+
 ## Features
 - Play connections on a Casio Prizm calculator
 - 831 total games

@@ -410,6 +410,7 @@ int main() {
   Bdisp_EnableColor(1);
   //Stop top bar from appearing when keys are pressed
   EnableDisplayHeader(0, 0);
+  EnableStatusArea(3);
 
   //Set random seed
   srand(RTC_GetTicks());

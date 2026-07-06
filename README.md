@@ -4,9 +4,10 @@ This is a port of [New York Times connections](https://www.nytimes.com/games/con
 All the games were gotten from [NYT-Connections-Answers](https://github.com/Eyefyre/NYT-Connections-Answers/tree/main) by Eyefyre.
 
 ## Screenshots
-![Menu Icon](/Screenshots/Icon.jpg)
+![Game](/Screenshots/Game.jpg)
 ![Controls in game](/Screenshots/Controls.jpg)
-![Half Completed game](/Screenshots/Half%20Completed.jpg)
+![Stats in game](/Screenshots/Stats.jpg)
+![Menu Icon](/Screenshots/Icon.jpg)
 
 ## Features
 - Play connections on a Casio Prizm calculator
@@ -23,6 +24,7 @@ All the games were gotten from [NYT-Connections-Answers](https://github.com/Eyef
 | F5 | Submit answer |
 | AC | Reset puzzle |
 | 0 | Reveal answer |
+| OPTN | View Stats |
 
 ## Installation
 - Download Connections.g3a (No need to download the whole project)
